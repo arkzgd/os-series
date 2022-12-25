@@ -1,5 +1,5 @@
 global start
-extern long_mode_start
+extern kernel_main
 
 section .text
 bits 32
@@ -10,11 +10,7 @@ start:
 	call check_cpuid
 	call check_long_mode
 
-	call setup_page_tables
-	call enable_paging
-
-	lgdt [gdt64.pointer]
-	jmp gdt64.code_segment:long_mode_start
+	call kernel_main
 
 	hlt
 
