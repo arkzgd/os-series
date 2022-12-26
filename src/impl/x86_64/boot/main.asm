@@ -8,7 +8,7 @@ start:
 
 	call check_multiboot
 	call check_cpuid
-	call check_long_mode
+	; call check_long_mode
 
 	; call setup_page_tables
 	; call enable_paging
