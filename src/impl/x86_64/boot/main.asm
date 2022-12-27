@@ -8,6 +8,7 @@ start:
 
 	call check_multiboot
 	call check_cpuid
+	call check_a20
 	; call check_long_mode
 
 	; call setup_page_tables
@@ -42,6 +43,20 @@ check_cpuid:
 	ret
 .no_cpuid:
 	mov al, "C"
+	jmp error
+
+check_a20:
+    pushad
+    mov edi,0x112345  ;odd megabyte address.
+    mov esi,0x012345  ;even megabyte address.
+    mov [esi],esi     ;making sure that both addresses contain diffrent values.
+    mov [edi],edi     ;(if A20 line is cleared the two pointers would point to the address 0x012345 that would contain 0x112345 (edi)) 
+    cmpsd             ;compare addresses to see if the're equivalent.
+    je .no_a20
+    popad
+    ret               ;if equivalent , the A20 line is cleared.
+.no_a20:
+    mov al, "A"
 	jmp error
 
 check_long_mode:
